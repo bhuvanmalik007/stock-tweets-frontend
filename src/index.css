@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Muli:ital@1&display=swap');
+
+html,
+body {
+  margin: 0;
+}
+
+html,
+body,
+#root{
+  height: 100%;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,3 +25,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
