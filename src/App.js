@@ -11,15 +11,15 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import useSWR from 'swr';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { ToastContainer, toast } from 'react-toastify';
 import SearchTextBox from './components/SearchTextBox';
 import SidebarResults from './components/SidebarResults';
 import Tweets from './components/Tweets';
 import HideOnScroll from './components/HideOnScroll';
+import { checkIdenticalArrays } from './helperFns';
+import { CORS_ENABLING_URL, STOCKTWITS_URL } from './constants';
+import 'react-toastify/dist/ReactToastify.css';
 
-// const url = 'http://localhost:3000/dev/unlock?url=';
-const url =
-  'https://2bn4rt06h5.execute-api.us-east-1.amazonaws.com/dev/unlock?url=';
-const stockTwitsUrl = 'https://api.stocktwits.com/api/2/streams/symbol/';
 const stockTwitsUrlBuilder = (baseUrl, symbol) => `${baseUrl + symbol}.json`;
 
 const drawerWidth = 300;
@@ -79,7 +79,7 @@ const useStyles = makeStyles(({ mixins, spacing, transitions, zIndex }) => ({
 function App() {
   // State
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [stockTwitsRequestUrlArray, setStockTwitsRequestUrlArray] = useState(
     [],
   );
@@ -91,30 +91,37 @@ function App() {
   const [sideBarLoader, setSideBarLoader] = useState(false);
   const [searchString, setSearchString] = useState('');
 
-  // SWR
+  // SWR with polling
   useSWR(
-    stockTwitsRequestUrlArray.length ? url + stockTwitsRequestUrlArray : null,
+    stockTwitsRequestUrlArray.length
+      ? CORS_ENABLING_URL + stockTwitsRequestUrlArray
+      : null,
     fetcher,
     {
       onSuccess: (data) => {
         setSideBarLoader(false);
+        console.log(data.data, stockTwitsRequestUrlArray);
         setResults(data.data.filter((result) => !result.errors));
+        if (
+          data.data.filter((result) => !result.errors).length < data.data.length
+        ) {
+          toast.error('Some stock symbols could not be found.');
+        }
         setStockTwitsRequestUrlArray(
           data.data
             .filter((result) => !result.errors)
             .map((result) => result.symbol.symbol)
-            .map((symbol) => stockTwitsUrlBuilder(stockTwitsUrl, symbol)),
+            .map((symbol) => stockTwitsUrlBuilder(STOCKTWITS_URL, symbol)),
         );
       },
-      onError: (err) => console.log(err),
-
+      onError: (err) => toast.error('Something went wrong.'),
       refreshInterval: 15000,
     },
   );
 
   // Event handlers
   const handleDrawerToggle = () => {
-    setOpen(!open);
+    setIsSideBarOpen(!isSideBarOpen);
   };
 
   const handleChange = (event) => {
@@ -123,8 +130,6 @@ function App() {
 
   const handleEnter = (event) => {
     if (event.keyCode !== 13 || event.target.value.trim() === '') return;
-    // event.target.value.trim() === StockTwitsRequestUrlArray;
-    // setStockTwitsRequestUrlArray([]);
     const requestedStocksList = event.target.value
       .split(',')
       .map((symbol) => symbol.trim().toUpperCase());
@@ -134,27 +139,20 @@ function App() {
       (result) => result.symbol.symbol,
     );
 
+    // Check if the stocks that are set right now are being requested again.
     if (
-      !(
-        requestedStocksList.length === previousRequestedStocksList.length &&
-        requestedStocksList
-          .sort()
-          .every(
-            (value, index) =>
-              value === previousRequestedStocksList.sort()[index],
-          )
-      )
+      checkIdenticalArrays(requestedStocksList, previousRequestedStocksList)
     ) {
-      setSideBarLoader(true);
+      return;
     }
-
+    setSideBarLoader(true);
     let combinedStocksList = [
       ...requestedStocksList,
       ...results.map((result) => result.symbol.symbol),
     ];
     combinedStocksList = [...new Set(combinedStocksList)];
     const updatedStockTwitsRequestUrlArray = combinedStocksList.map((symbol) =>
-      stockTwitsUrlBuilder(stockTwitsUrl, symbol),
+      stockTwitsUrlBuilder(STOCKTWITS_URL, symbol),
     );
     setStockTwitsRequestUrlArray(updatedStockTwitsRequestUrlArray);
   };
@@ -185,7 +183,6 @@ function App() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-
       <HideOnScroll>
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
@@ -204,12 +201,13 @@ function App() {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-
       <Drawer
-        className={clsx(classes.drawer, { [classes.drawer_closed]: !open })}
+        className={clsx(classes.drawer, {
+          [classes.drawer_closed]: !isSideBarOpen,
+        })}
         variant="persistent"
         anchor="left"
-        open={open}
+        open={isSideBarOpen}
         classes={{
           paper: classes.drawerPaper,
         }}
@@ -230,13 +228,13 @@ function App() {
         />
         <Divider />
       </Drawer>
-
       <Tweets
         drawerWidth={drawerWidth}
         feedStatus={feedStatus}
         results={results}
-        open={open}
+        open={isSideBarOpen}
       />
+      <ToastContainer autoClose={5000} />
     </div>
   );
 }
