@@ -83,7 +83,7 @@ export default function Tweets({ feedStatus, results, open }) {
           <img src={empty} alt="empty" />
           <Typography paragraph align="center" color="textSecondary">
             {` Welcome to Stock Tweets! Get started by searching for your
-            favorite stocks to get all the buzz around them on Twitter in
+            favorite stocks from the sidebar to get all the buzz around them on Twitter in
             real-time.`}
           </Typography>
         </div>

@@ -23,11 +23,14 @@ import {
 } from './helperFns';
 import { CORS_ENABLING_URL, STOCKTWITS_URL } from './constants';
 import 'react-toastify/dist/ReactToastify.css';
+import { isMobile } from 'react-device-detect';
 
 const drawerWidth = 200;
 
 // Styles
-const useStyles = makeStyles(({ mixins, spacing, transitions, zIndex }) => ({
+const useStyles = makeStyles(({
+  mixins, spacing, transitions, zIndex,
+}) => ({
   root: {
     display: 'flex',
     height: '100%',
@@ -80,7 +83,7 @@ const useStyles = makeStyles(({ mixins, spacing, transitions, zIndex }) => ({
 function App() {
   // State
   const classes = useStyles();
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(!isMobile);
   const [stockTwitsRequestUrlArray, setStockTwitsRequestUrlArray] = useState(
     [],
   );
@@ -156,9 +159,7 @@ function App() {
       ...results.map((result) => result.symbol.symbol),
     ];
     combinedStocksList = [...new Set(combinedStocksList)];
-    const updatedStockTwitsRequestUrlArray = combinedStocksList.map((symbol) =>
-      stockTwitsUrlBuilder(STOCKTWITS_URL, symbol),
-    );
+    const updatedStockTwitsRequestUrlArray = combinedStocksList.map((symbol) => stockTwitsUrlBuilder(STOCKTWITS_URL, symbol));
     setStockTwitsRequestUrlArray(updatedStockTwitsRequestUrlArray);
   };
 
