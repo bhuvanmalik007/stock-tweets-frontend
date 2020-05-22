@@ -24,7 +24,7 @@ import {
 import { CORS_ENABLING_URL, STOCKTWITS_URL } from './constants';
 import 'react-toastify/dist/ReactToastify.css';
 
-const drawerWidth = 300;
+const drawerWidth = 200;
 
 // Styles
 const useStyles = makeStyles(({ mixins, spacing, transitions, zIndex }) => ({

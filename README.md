@@ -1,5 +1,6 @@
 
 # *Stock Tweets* [DEMO](https://stocktwitter.netlify.app/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3dcb0b8a-5f93-4814-884b-046081a138ad/deploy-status)](https://app.netlify.com/sites/stocktwitter/deploys)
 
  - Powered by [cors-enabler](https://github.com/bhuvanmalik007/cors-enabler), an **AWS Lambda service deployed using Serverless framework** that enables cross origin requests. The microservice takes a url or an array of urls that don't have CORS enabled on their servers, sends requests and finally send back the response to the browser. 
  - Tweets by StockTwits API.
