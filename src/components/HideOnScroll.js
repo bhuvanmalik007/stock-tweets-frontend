@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Slide from '@material-ui/core/Slide';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 
@@ -11,3 +12,7 @@ export default function HideOnScroll({ children }) {
     </Slide>
   );
 }
+
+HideOnScroll.propTypes = {
+  children: PropTypes.element.isRequired,
+};

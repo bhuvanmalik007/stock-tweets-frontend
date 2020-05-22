@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 const useStyles = makeStyles(({ breakpoints, transitions }) => ({
   cardContainer: {
@@ -39,19 +40,26 @@ const useStyles = makeStyles(({ breakpoints, transitions }) => ({
     fontFamily: "'Muli', sans-serif",
     fontSize: '1.25rem',
   },
+  cardHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
 }));
 
 export default function TweetCard({ message }) {
   const classes = useStyles();
+  const getTimestamp = (createdAt) => moment(createdAt).calendar();
 
   return (
     <Card
       className={classes.cardContainer}
       key={message.id}
       variant="outlined"
-      onClick={() => window.open(
-        `https://stocktwits.com/${message.user.username}/message/${message.id}`,
-      )}
+      onClick={() =>
+        window.open(
+          `https://stocktwits.com/${message.user.username}/message/${message.id}`,
+        )
+      }
     >
       <CardHeader
         disableTypography
@@ -60,7 +68,14 @@ export default function TweetCard({ message }) {
         }
         title={message.user.name}
         subheader={
-          <Typography color="textSecondary">{`@${message.user.username}`}</Typography>
+          <div className={classes.cardContainer.cardHeader}>
+            <Typography color="textSecondary">
+              {`@${message.user.username}`}
+            </Typography>
+            <Typography color="textSecondary">
+              {getTimestamp(message.created_at)}
+            </Typography>
+          </div>
         }
       />
       <CardContent>
@@ -76,6 +91,7 @@ TweetCard.propTypes = {
   message: PropTypes.shape({
     body: PropTypes.string,
     id: PropTypes.number,
+    created_at: PropTypes.string,
     user: PropTypes.shape({
       avatar_url: PropTypes.string,
       name: PropTypes.string,

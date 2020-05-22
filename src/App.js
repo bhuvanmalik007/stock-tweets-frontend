@@ -16,7 +16,9 @@ import SidebarResults from './components/SidebarResults';
 import Tweets from './components/Tweets';
 import HideOnScroll from './components/HideOnScroll';
 
-const url = 'http://localhost:3000/dev/unlock?url=';
+// const url = 'http://localhost:3000/dev/unlock?url=';
+const url =
+  'https://2bn4rt06h5.execute-api.us-east-1.amazonaws.com/dev/unlock?url=';
 const stockTwitsUrl = 'https://api.stocktwits.com/api/2/streams/symbol/';
 const stockTwitsUrlBuilder = (baseUrl, symbol) => `${baseUrl + symbol}.json`;
 
@@ -104,7 +106,9 @@ function App() {
             .map((symbol) => stockTwitsUrlBuilder(stockTwitsUrl, symbol)),
         );
       },
-      refreshInterval: 0,
+      onError: (err) => console.log(err),
+
+      refreshInterval: 15000,
     },
   );
 
@@ -119,16 +123,35 @@ function App() {
 
   const handleEnter = (event) => {
     if (event.keyCode !== 13 || event.target.value.trim() === '') return;
-    setSideBarLoader(true);
-    setSearchString('');
+    // event.target.value.trim() === StockTwitsRequestUrlArray;
+    // setStockTwitsRequestUrlArray([]);
     const requestedStocksList = event.target.value
       .split(',')
       .map((symbol) => symbol.trim().toUpperCase());
+    setSearchString('');
+
+    const previousRequestedStocksList = [...results].map(
+      (result) => result.symbol.symbol,
+    );
+
+    if (
+      !(
+        requestedStocksList.length === previousRequestedStocksList.length &&
+        requestedStocksList
+          .sort()
+          .every(
+            (value, index) =>
+              value === previousRequestedStocksList.sort()[index],
+          )
+      )
+    ) {
+      setSideBarLoader(true);
+    }
+
     let combinedStocksList = [
       ...requestedStocksList,
       ...results.map((result) => result.symbol.symbol),
     ];
-
     combinedStocksList = [...new Set(combinedStocksList)];
     const updatedStockTwitsRequestUrlArray = combinedStocksList.map((symbol) =>
       stockTwitsUrlBuilder(stockTwitsUrl, symbol),
