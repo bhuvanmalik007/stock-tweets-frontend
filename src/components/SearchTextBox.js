@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 export default function SearchTextBox({
   searchString,
   handleChange,
-  handleEnter,
+  handleSearch,
 }) {
   const classes = useStyles();
 
@@ -31,11 +31,14 @@ export default function SearchTextBox({
         rowsMax={4}
         value={searchString}
         onChange={handleChange}
-        // onKeyDown={handleEnter}
+        onKeyDown={handleSearch}
         placeholder="EX: AMZN, AAPL, NFLX"
-        align="center"
       />
-      <Button color="primary" variant="contained">
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => handleSearch()}
+      >
         Search
       </Button>
     </div>
@@ -45,5 +48,5 @@ export default function SearchTextBox({
 SearchTextBox.propTypes = {
   searchString: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  handleEnter: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };

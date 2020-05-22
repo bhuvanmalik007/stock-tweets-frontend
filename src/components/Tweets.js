@@ -82,7 +82,9 @@ export default function Tweets({ feedStatus, results, open }) {
         <div className={classes.emptyView}>
           <img src={empty} alt="empty" />
           <Typography paragraph align="center" color="textSecondary">
-            Please search/choose a stock to display tweets related to it.
+            {` Welcome to Stock Tweets! Get started by searching for your
+            favorite stocks to get all the buzz around them on Twitter in
+            real-time.`}
           </Typography>
         </div>
       )}

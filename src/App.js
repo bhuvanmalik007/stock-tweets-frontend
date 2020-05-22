@@ -129,9 +129,13 @@ function App() {
     setSearchString(event.target.value);
   };
 
-  const handleEnter = (event) => {
-    if (event.keyCode !== 13 || event.target.value.trim() === '') return;
-    const requestedStocksList = event.target.value
+  const handleSearch = (event) => {
+    if (event && event.keyCode !== 13) return;
+    if (searchString.trim() === '') {
+      toast.warn('Search field is empty.');
+      return;
+    }
+    const requestedStocksList = searchString
       .split(',')
       .map((symbol) => symbol.trim().toUpperCase());
     setSearchString('');
@@ -218,7 +222,7 @@ function App() {
         <SearchTextBox
           searchString={searchString}
           handleChange={handleChange}
-          handleEnter={handleEnter}
+          handleSearch={handleSearch}
         />
         {sideBarLoader && <LinearProgress />}
         <SidebarResults

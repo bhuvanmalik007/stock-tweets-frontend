@@ -6,6 +6,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function SidebarResults({
   toggleActiveStock,
@@ -27,13 +28,15 @@ export default function SidebarResults({
             secondary={result.symbol.title}
           />
           <ListItemSecondaryAction>
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={(event) => removeStock(event, index)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Stop real-time updates." aria-label="delete">
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={(event) => removeStock(event, index)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </ListItemSecondaryAction>
         </ListItem>
       ))}

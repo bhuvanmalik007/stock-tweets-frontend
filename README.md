@@ -6,7 +6,7 @@
  - Tweets by StockTwits API.
  - **React** as view library. (Latest version)
  - **React Hooks** for state management without classes and managing component lifecycle.
- - Uses **SWR**(`stale-while-revalidate`) for interval polling. With SWR, components will get **a stream of data updates constantly and automatically**.
+ - Uses **SWR**(`stale-while-revalidate`) for interval polling, revalidation on focus etc. With SWR, components will get **a stream of data updates constantly and automatically**.
  - Prettier + ESLint + Airbnb Style Guide for code formatting and maintainable code style.
  - Typechecking With React PropTypes.
  - ECMAScript Modules for separating different concerns of the application.
