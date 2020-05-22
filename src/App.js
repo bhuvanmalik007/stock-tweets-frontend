@@ -16,16 +16,17 @@ import SearchTextBox from './components/SearchTextBox';
 import SidebarResults from './components/SidebarResults';
 import Tweets from './components/Tweets';
 import HideOnScroll from './components/HideOnScroll';
-import { checkIdenticalArrays } from './helperFns';
+import {
+  checkIdenticalArrays,
+  stockTwitsUrlBuilder,
+  fetcher,
+} from './helperFns';
 import { CORS_ENABLING_URL, STOCKTWITS_URL } from './constants';
 import 'react-toastify/dist/ReactToastify.css';
 
-const stockTwitsUrlBuilder = (baseUrl, symbol) => `${baseUrl + symbol}.json`;
-
 const drawerWidth = 300;
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
+// Styles
 const useStyles = makeStyles(({ mixins, spacing, transitions, zIndex }) => ({
   root: {
     display: 'flex',
